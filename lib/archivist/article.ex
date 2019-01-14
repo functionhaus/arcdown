@@ -6,6 +6,19 @@ defmodule Archivist.Article do
 
   @parsed Archivist.Parser.parse_articles()
 
+  @type t :: %__MODULE__{
+    title: String.t,
+    author: String.t,
+    summary: String.t,
+    content: String.t,
+    parsed_content: String.t,
+    topic: String.t,
+    tags: [atom()],
+    slug: String.t,
+    created_at: DateTime.t,
+    published_at: DateTime.t
+  }
+
   defstruct [
     :title,
     :author,
@@ -20,7 +33,7 @@ defmodule Archivist.Article do
   ]
 
   @doc "Returns a list of all articles."
-  @spec all() :: [%Archivist.Article.t()]
+  @spec all() :: [__MODULE__.t]
   def all, do: @parsed
 
 end
