@@ -7,7 +7,7 @@ defmodule ArchivistTest do
   end
 
   test "parses the markdown" do
-    {:ok, contents} = File.read "test.md"
+    {:ok, contents} = File.read "test/support/test_article.md"
 
     [metadata, article] = Regex.split(~r/\n---\n\n/, contents)
 
