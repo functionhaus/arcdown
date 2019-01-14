@@ -1,7 +1,8 @@
-defmodule ConnArtist.MixProject do
+defmodule Archivist.MixProject do
   use Mix.Project
 
   def project do
+    [
       app: :archivist,
       name: "Archivist",
       version: "0.0.1",
@@ -31,6 +32,8 @@ defmodule ConnArtist.MixProject do
   defp deps do
     [
      {:earmark, "~> 1.3"},
+     {:yaml_elixir, "~> 2.1"},
+     {:jason, "~> 1.1"},
      {:ex_doc, "~> 0.19", only: :dev, runtime: false},
      {:dialyxir, "~> 0.5", only: [:dev], runtime: false}
     ]
