@@ -4,8 +4,6 @@ defmodule Archivist.Article do
   populated at compile-time along with their topics, tags and authors.
   """
 
-  @parsed Archivist.Parser.parse_articles()
-
   @type t :: %__MODULE__{
     title: String.t,
     author: String.t,
@@ -29,9 +27,5 @@ defmodule Archivist.Article do
     :created_at,
     :published_at
   ]
-
-  @doc "Returns a list of all articles."
-  @spec all() :: [__MODULE__.t]
-  def all, do: @parsed
 
 end
