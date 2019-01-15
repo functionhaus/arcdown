@@ -51,5 +51,10 @@ defmodule Archivist.Parsers.ArticleParser do
   end
 
   defp parse_tags tag_string do
+    tag_string
+    |> String.trim
+    |> String.split ~r/\w+/
+    |> Enum.map &(String.replace &1, ~r/-+/, "_")
+    |> Enum.map &(String.to_atom &1)
   end
 end
