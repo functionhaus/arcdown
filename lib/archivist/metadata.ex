@@ -4,17 +4,21 @@ defmodule Archivist.Metadata do
   """
 
   @type t :: %__MODULE__{
-    title: String.t,
-    author: String.t,
-    summary: String.t,
+    title: String.t(),
+    slug: String.t(),
+    author: String.t(),
+    author_email: String.t(),
+    summary: String.t(),
     tags: [atom()],
-    created_at: DateTime.t,
-    published_at: DateTime.t
+    created_at: DateTime.t(),
+    published_at: DateTime.t()
   }
 
   defstruct [
     :title,
+    :slug,
     :author,
+    :author_name,
     :summary,
     :tags,
     :created_at,
