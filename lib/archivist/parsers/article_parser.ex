@@ -1,10 +1,10 @@
 defmodule Archivist.Parsers.ArticleParser do
   alias Archivist.Article
+  alias Archivist.Parsers.MetadataParser
 
-  @divider_pattern = ~r/\n---\n\n/
-  @datetimes = [:created_at, :published_at]
+  @divider_pattern = ~r/\n---\n{1,2}/
 
-  def from_file path do
+  def parse_file path do
     path
       |> File.read
       |> split_parts
@@ -16,45 +16,11 @@ defmodule Archivist.Parsers.ArticleParser do
   end
 
   defp build_article {:ok, metadata, content} do
-    parsed_metadata = metadata
-      |> YamlElixir.read_from_string
-      |> atomize_keys
-      |> parse_values
+    {:ok, parsed_content, _} = content
+      |> String.trim
+      |> Earmark.as_html
 
-    {:ok, parsed_content, _} = Earmark.as_html content
-
-    parsed_metadata
+    MetadataParser.parse_raw(metadata)
     |> Enum.into %Article{content: parsed_content}
-  end
-
-  defp atomize_keys {:ok, parsed_metadata} do
-    Stream.flat_map parsed_metadata, fn {key, val} ->
-      new_key = key
-        |> String.downcase
-        |> String.to_atom
-
-      new_key, val
-    end
-  end
-
-  defp parse_values atomized do
-    Enum.map atomized, fn {key, value} ->
-      cond do
-        Enum.member? @datetimes, key ->
-          DateTime.from_naive(value, "Etc/UTC")
-        key == :tags ->
-          parse_tags value
-        _ ->
-          value
-      end
-    end
-  end
-
-  defp parse_tags tag_string do
-    tag_string
-    |> String.trim
-    |> String.split ~r/\w+/
-    |> Enum.map &(String.replace &1, ~r/-+/, "_")
-    |> Enum.map &(String.to_atom &1)
   end
 end
