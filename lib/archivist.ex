@@ -27,20 +27,4 @@ defmodule Archivist do
   * Archivist allows you to *tag* your articles however you'd like. It can also
   enforce a constrained set of tags at compile-time if desired.
   """
-
-  def articles do
-    __MODULE__.Article.all()
-  end
-
-  def topics do
-    __MODULE__.Topic.all()
-  end
-
-  def tags do
-    __MODULE__.Tag.all()
-  end
-
-  def authors do
-    __MODULE__.Author.all()
-  end
 end
