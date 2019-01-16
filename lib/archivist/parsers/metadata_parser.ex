@@ -6,6 +6,13 @@ defmodule Archivist.Parsers.MetadataParser do
   values, and returning a %Metadata{} struct.
   """
 
+  @patterns %{
+    title: ~r/(?<title>^[\w\s]+[\w]+)\ ?\<?[a-z0-9\-]*\>?\n/,
+    slug: ~r/^[\w\s]+\<(?<slug>[a-z0-9\-]+)\>\n/,
+    author: ~r/\nby\ (?<author>[\w\s]+[\w]+)\ ?\<.*\>?\n/,
+    email: ~r/\nby\ [\w\s]+\<(?<email>.*)\>\n/
+  }
+
   # @datetimes [:created_at, :published_at]
 
   @doc "Parses a raw metadata string and formats it as a struct"
@@ -13,43 +20,30 @@ defmodule Archivist.Parsers.MetadataParser do
   def parse_raw(raw_header) do
     {%Metadata{}, raw_header}
       |> parse_title
-      |> parse_slug
-      |> parse_author
-      |> parse_author_email
+      |> parse_optional(:slug)
+      |> parse_optional(:author)
+      |> parse_optional(:email)
       |> parse_timestamps
       |> parse_tags
       |> parse_summary
   end
 
   def parse_title({metadata, header}) do
-    title = match_one ~r/^[\w\s]+/, header
+    %{"title" => title} = Regex.named_captures @patterns[:title], header
     {Map.put(metadata, :title, title), header}
   end
 
-  def parse_slug({metadata, header}) do
-    slug = match_one ~r/(?<=\<)[a-z0-9\-]+(?=\>\n)/, header
-    {Map.put(metadata, :slug, slug), header}
+  def parse_optional({metadata, header}, attr) do
+    atomized_attr = Atom.to_string(attr)
+
+    case Regex.named_captures(@patterns[attr], header) do
+      %{^atomized_attr => captured} ->
+        {Map.put(metadata, attr, captured), header}
+      nil ->
+        {metadata, header}
+    end
   end
 
-  def parse_author({metadata, header}) do
-    author = match_one ~r/(?<=\nby\ )[\w\s]+/, header
-    {Map.put(metadata, :author, author), header}
-  end
-
-  def parse_author_email({metadata, header}) do
-    author_email = match_one ~r/(?<=\nby\ ).*(?=\>\n)/, header
-    {Map.put(metadata, :author_email, author_email), header}
-  end
-
-  defp match_one(pattern, string) do
-    pattern
-      |> Regex.run(string, capture: :first)
-      |> List.first
-      |> String.trim
-  end
-
-  def parse_author(_) do
-  end
   def parse_timestamps(_) do
   end
   def parse_tags(_) do

@@ -17,17 +17,17 @@ defmodule MetadataParserTest do
   end
 
   test "parses the slug", context do
-    {%Metadata{slug: slug},  _} = MetadataParser.parse_slug {%Metadata{}, context[:header]}
+    {%Metadata{slug: slug},  _} = MetadataParser.parse_optional {%Metadata{}, context[:header]}, :slug
     assert slug == "the-day-the-earth-stood-still"
   end
 
   test "parses the author", context do
-    {%Metadata{author: author},  _} = MetadataParser.parse_author {%Metadata{}, context[:header]}
+    {%Metadata{author: author},  _} = MetadataParser.parse_optional {%Metadata{}, context[:header]}, :author
     assert author == "Mike Zazaian"
   end
 
   test "parses the author's email", context do
-    {%Metadata{author_email: author_email},  _} = MetadataParser.parse_author_email {%Metadata{}, context[:header]}
+    {%Metadata{email: author_email},  _} = MetadataParser.parse_optional {%Metadata{}, context[:header]}, :email
     assert author_email == "mike@functionhaus.com"
   end
 
