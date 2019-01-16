@@ -8,18 +8,7 @@ defmodule Archivist.Parsers.MetadataParser do
 
   @datetimes [:created_at, :published_at]
 
-  @doc """
-  Parses a raw metadata string and formats it as a struct"
-
-  ## Examples
-
-     iex> __MODULE__.parse_raw("title: The title\n author: Dave Thomas\n")
-     %Metadata{
-       title: "The title",
-       author: "Dave Thomas"
-     }
-
-  """
+  @doc "Parses a raw metadata string and formats it as a struct"
   @spec parse_raw(binary()) :: Metadata.t()
   def parse_raw(raw_metadata) do
     raw_metadata
