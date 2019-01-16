@@ -4,20 +4,12 @@ defmodule Archivist.Repo do
   articles root directory.
   """
 
-  alias Archivist.Article
-
-  @repo_path = Path.relative_to_cwd "priv/archivist"
-
-  @spec repo_path() :: binary()
-  def repo_path, do: @repo_path
-
-  @spec all() :: [Article.t()]
-  def all, do: @parsed_articles
+  @repo_path Path.relative_to_cwd "priv/archivist"
 
   def topic_names do
-    repo_path
-    |> ls
-    |> Enum.filter &(File.dir? &1)
+    @repo_path
+    |> File.ls
+    |> Enum.filter(&(File.dir? &1))
   end
 
   def articles do

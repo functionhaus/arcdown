@@ -11,11 +11,11 @@ defmodule Archivist.Parsers.TagParser do
 
   """
   @spec parse_list(binary()) :: [atom()]
-  def parse_list(tag_string) doc
+  def parse_list(tag_string) do
     tag_string
       |> String.trim
-      |> String.split ~r/\w+/
-      |> Enum.map &(String.replace &1, ~r/-+/, "_")
-      |> Enum.map &(String.to_atom &1)
+      |> String.split(~r/\w+/)
+      |> Enum.map(&(String.replace &1, ~r/-+/, "_"))
+      |> Enum.map(&(String.to_atom &1))
   end
 end

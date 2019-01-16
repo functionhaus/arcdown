@@ -6,7 +6,7 @@ defmodule Archivist.Parsers.MetadataParser do
   values, and returning a %Metadata{} struct.
   """
 
-  @datetimes = [:created_at, :published_at]
+  @datetimes [:created_at, :published_at]
 
   @doc """
   Parses a raw metadata string and formats it as a struct"
@@ -26,35 +26,34 @@ defmodule Archivist.Parsers.MetadataParser do
       |> YamlElixir.read_from_string
       |> atomize_keys
       |> parse_values
-      |> Enum.into %Metadata{}
+      |> Enum.into(%Metadata{})
   end
 
-  @doc "Build a stream for converting map key strings into atoms"
-  @spec atomize_keys({:ok, %{required(String.t()) => String.t()}) :: %{required(atom()) => String.t()})
+  @spec atomize_keys({:ok, %{required(String.t()) => String.t()}}) :: %{required(atom()) => String.t()}
   defp atomize_keys {:ok, parsed_metadata} do
-    Stream.flat_map parsed_metadata, fn {key, val} ->
+    Stream.transform parsed_metadata, %{}, fn {key, val}, acc ->
       new_key = key
         |> String.downcase
         |> String.to_atom
 
-      new_key, val
+      Map.put acc, new_key, val
     end
   end
 
-  @doc "Formats special values (datetimes, lists) in the map."
-  @spec parse_values({:ok, %{required(atom()) => String.t()}) :: %{required(atom()) => String.t()})
+  @spec parse_values({:ok, %{required(atom()) => String.t()}}) :: %{required(atom()) => String.t()}
   defp parse_values atomized do
-    for {key, value} <- atomized, into: %{}, fn {key, value} ->
-      value = cond do
+    Enum.reduce atomized, fn {key, val}, acc ->
+      parsed_value = cond do
         Enum.member? @datetimes, key ->
-          DateTime.from_naive(value, "Etc/UTC")
+          DateTime.from_naive(val, "Etc/UTC")
         key == :tags ->
-          TagParser.parse_list value
-        _ ->
-          value
+          TagParser.parse_list val
+        true ->
+          val
       end
 
-      key, value
+
+      Map.put acc, key, parsed_value
     end
   end
 end

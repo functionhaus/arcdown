@@ -18,7 +18,7 @@ defmodule Archivist.Metadata do
     :title,
     :slug,
     :author,
-    :author_name,
+    :author_email,
     :summary,
     :tags,
     :created_at,
