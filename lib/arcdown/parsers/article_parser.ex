@@ -1,14 +1,14 @@
-defmodule Archivist.Parsers.ArticleParser do
+defmodule Arcdown.Parsers.ArticleParser do
   @moduledoc """
   Module responsible for parsing the entire content and filename of a single
   article file and generating an %Article{} struct populated with all
   relevant attributes and metadata
   """
 
-  alias Archivist.Article
-  alias Archivist.Parsers.MetadataParser
+  alias Arcdown.Article
+  alias Arcdown.Parsers.MetadataParser
 
-  @divider_pattern ~r/\n---\n{1,2}/
+  @divider_pattern ~r/\n---\n/
 
   @doc "Take in a filename, split the contents, and build the %Article struct."
   @spec parse_file(binary()) :: Article.t()

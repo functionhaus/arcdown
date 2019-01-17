@@ -1,4 +1,4 @@
-defmodule Archivist.Parsers.TagParser do
+defmodule Arcdown.Parsers.TagParser do
   @moduledoc "A module for parsing raw tag lists from a source article."
 
   @doc """

@@ -1,4 +1,4 @@
-defmodule Archivist.Metadata do
+defmodule Arcdown.Metadata do
   @moduledoc """
   Available metadata fields for articles.
   """

@@ -1,63 +1,117 @@
-# archivist
+# Arcdown
 
-Archivist is an opinionated blogging utility for generating article content
-at compile time from version-controlled markdown files.
+Arcdown is a parsing library for articles written in Arcdown (.ad) format.
 
-Archivist is based on the general approach of Cẩm Huỳnh's great
-[Nabo](https://github.com/qcam/nabo) library with some key differences:
+It is written in pure Elixir/Erlang with no additional dependencies when being
+used in production.
 
-* Archivist is an *opinionated* piece of software, meaning it makes decisions
-about how your content should be formatted (Markdown) and parsed (Earmark).
+# What is Arcdown (.ad) format?
 
-* Archivist allows articles to be organized into *topic* directories. Articles
-within each directory will be organized by the topic under which they're stored.
+Arcdown (.ad) format is a lightweight file format for writing full-featured
+content and articles as plain text in order to easily parse them as rich
+objects.
 
-* Archivist doesn't bother parsing your article summary as markdown because
-it's usually only a sentence or two, and you can do that on your own.
+The objective of this format is to allow the author to write full articles
+in plain text in order to easily parse them into rich objects in whatever
+language you're using.
 
-* Archivist allows you to store *flexibly-formatted metadata* with each article
-in case you need to store additional data with any article.
+Arcdown supports the following features:
 
-* Archivist adds default attributes for author names and email addresses, as
-well as sorting content by author.
+* title
+* url slug
+* author name and email
+* topics
+* sub-topics
+* tags
+* article summary
+* article body/content.
 
-* Archivist allows you to set a `created_at` and `published_at` timestamps to
-give you greater control over content organization.
+Here is an example article written in *Arcdown (.ad)* format:
 
-* Archivist allows you to *tag* your articles however you'd like. It can also
-enforce a constrained set of tags at compile-time if desired.
+```
+The Day the Earth Stood Still <the-day-the-earth-stood-still>
+by Julian Blaustein <julian@blaustein.com>
+
+filed under Films > Sci-Fi > Classic
+
+Created @ 10:24pm on 1/20/2019
+Published @ 10:20pm on 1/20/2019
+
+* Sci-Fi
+* Horror
+* Thrillers
+* Aliens
+
+Summary:
+A sci-fi classic about a flying saucer landing in Washington, D.C.
+
+---
+
+The Day the Earth Stood Still (a.k.a. Farewell to the Master and Journey to the
+World) is a 1951 American black-and-white science fiction film from 20th Century
+Fox, produced by Julian Blaustein and directed by Robert Wise.
+
+```
+
+Arcdown doesn't presume that you want to parse the Article content/body in any
+particular way in order to give you as much flexibility as possible in its
+usage. It's simple enough, however, to simply write the Article content as
+Markdown (.md) and parse that later with a library like
+[Earmark](https://github.com/pragdave/earmark).
+
+It's suggested that Arcdown files with the content body written in Markdown use
+the *.md.ad* file extension to remain conventionally consistent.
+
+Additional content parsing options may be included in the future, but for now
+the goal is to remain as content-agnostic as possible in order to give users the
+choice of how format and write their own articles.
+
+
+## Usage
+
+Because arcdown (.ad) files are parsed entirely with robust regular expressions,
+formatting must match the above example exactly.
+
+However not all of the above elements have to be included in an arcdown file.
+In fact it's perfectly acceptable to parse an empty file. Arcdown will just
+return an empty `%Arcdown.Article{}` struct.
+
+There are some situations in which extraneous whitespace `\s` and newline `\n`
+characters will be trimmed and ignored, but for the mostpart Arcdown wants you
+to follow its format as close to the letter as possible in order to not have to
+bloat its parsing logic with attempts to discern formatting errors.
 
 ## Installation
 
-The package can be installed by adding `archivist` to your list of
+The package can be installed by adding `arcdown` to your list of
 dependencies in `mix.exs`:
 
 ```elixir
 def deps do
   [
-    {:archivist, "~> 0.0"}
+    {:arcdown, "~> 0.0"}
   ]
 end
 ```
 
 # Usage
 
-Create your articles and topics directories as `priv/archivist` at the root of
+Create your articles and topics directories as `priv/arcdown` at the root of
 your elixir library. For example:
 
-`priv/archivist/dev_ops/2019-01-14--some_great_name.md`
+`priv/arcdown/dev_ops/2019-01-14--some_great_name.md`
 
 ## Availability
 
 This library is currently published at for use with the public hex.pm
-repository at https://hex.pm/packages/archivist.
+repository at https://hex.pm/packages/arcdown.
 
 Source code is available at the [FunctionHaus Github Organization](
 https://github.com/functionhaus) at
-https://github.com/functionhaus/archivist.
+https://github.com/functionhaus/arcdown.
 
 
 ## License
 
-archivist source code is released under Apache 2 License.
+Arcdown source code is released under Apache 2 License.
 Check LICENSE file for more information.

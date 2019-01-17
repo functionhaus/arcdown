@@ -1,10 +1,10 @@
 defmodule MetadataParserTest do
   use ExUnit.Case
-  alias Archivist.Parsers.MetadataParser
-  alias Archivist.Metadata
+  alias Arcdown.Parsers.MetadataParser
+  alias Arcdown.Metadata
 
   setup do
-    {:ok, header} = "test/support/mock_header.arc"
+    {:ok, header} = "test/support/articles/complete.ad"
       |> Path.relative_to_cwd
       |> File.read
 

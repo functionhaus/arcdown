@@ -1,6 +1,6 @@
-defmodule Archivist.Article do
+defmodule Arcdown.Article do
   @moduledoc """
-  The core datatype for the Archivist system. Articles are parsed and
+  The core datatype for the Arcdown system. Articles are parsed and
   populated at compile-time along with their topics, tags and authors.
   """
 

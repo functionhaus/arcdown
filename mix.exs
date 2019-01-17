@@ -1,23 +1,23 @@
-defmodule Archivist.MixProject do
+defmodule Arcdown.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :archivist,
-      name: "Archivist",
-      version: "0.0.1",
-      elixir: "~> 1.7",
+      app: :arcdown,
+      name: "Arcdown",
+      version: "0.1.0",
+      elixir: "~> 1.8",
       start_permanent: Mix.env() == :prod,
       build_embedded: Mix.env() == :prod,
       elixirc_paths: elixirc_paths(Mix.env),
       deps: deps(),
       description: description(),
       package: package(),
-      source_url: "https://github.com/functionhaus/archivist",
+      source_url: "https://github.com/functionhaus/arcdown",
       homepage_url: "https://functionhaus.com",
 
       docs: [
-        main: "Archivist", # The main page in the docs
+        main: "Arcdown", # The main page in the docs
         logo: "assets/functionhaus_logo.png",
         extras: ["README.md"]
       ]
@@ -36,15 +36,15 @@ defmodule Archivist.MixProject do
 
   defp deps do
     [
-     {:earmark, "~> 1.3"},
-     {:yaml_elixir, "~> 2.1"},
      {:ex_doc, "~> 0.19", only: :dev, runtime: false},
-     {:dialyxir, "~> 0.5", only: [:dev], runtime: false}
+     {:dialyxir, "~> 0.5", only: :dev, runtime: false}
     ]
   end
 
   defp description do
-    "Opinionated blog utility for writing in-repo articles with markdown."
+    """
+    A parsing library for articles written in Arcdown (.ad) format.
+    """
   end
 
   defp package do
@@ -53,8 +53,8 @@ defmodule Archivist.MixProject do
      maintainers: ["FunctionHaus LLC, Mike Zazaian"],
      licenses: ["Apache 2"],
 
-     links: %{"GitHub" => "https://github.com/functionhaus/archivist",
-              "Docs" => "https://hexdocs.pm/archivist/"}
+     links: %{"GitHub" => "https://github.com/functionhaus/arcdown",
+              "Docs" => "https://hexdocs.pm/arcdown/"}
      ]
   end
 end
