@@ -66,7 +66,6 @@ Additional content parsing options may be included in the future, but for now
 the goal is to remain as content-agnostic as possible in order to give users the
 choice of how format and write their own articles.
 
-
 ## Usage
 
 Because arcdown (.ad) files are parsed entirely with robust regular expressions,
@@ -89,17 +88,10 @@ dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:arcdown, "~> 0.0"}
+    {:arcdown, "~> 0.1"}
   ]
 end
 ```
-
-# Usage
-
-Create your articles and topics directories as `priv/arcdown` at the root of
-your elixir library. For example:
-
-`priv/arcdown/dev_ops/2019-01-14--some_great_name.md`
 
 ## Availability
 
