@@ -9,7 +9,7 @@ defmodule Arcdown.Parsers.DateTimeParser do
     time: ~r/(?<hour>\d{1,2}):(?<minute>\d{2})(?<meridiem>[ap]m)$/
   }
 
-  @spec parse_human_12h(binary(), binary() :: {:ok, DateTime.t()}
+  @spec parse_human_12h(binary(), binary()) :: {:ok, DateTime.t()}
   def parse_human_12h(date, time) do
     %{"month" => month, "day" => day, "year" => year} = Regex.named_captures @patterns[:date], date
     %{"hour" => hour, "minute" => minute, "meridiem" => meridiem} = Regex.named_captures @patterns[:time], time

@@ -68,8 +68,8 @@ defmodule Arcdown.Parsers.HeaderParser do
   If no text is found in the header string that matches the pattern for the
   given attribute, the original %Article{} struct will be returned instead.
 
-  Matching patterns are parsed and returned as timestamps, and applied to the
-  matching attribute name in the %Article{} struct.
+  Matching patterns are parsed and returned as DateTime structs, and applied
+  to the matching attribute name in the %Article{} struct.
   """
   @spec parse_timestamp({Article.t(), binary()}, atom()) :: {Article.t(), binary()}
   def parse_timestamp({article, header}, attr) do
