@@ -58,16 +58,16 @@ defmodule Arcdown.Parsers.HeaderParser do
     %{"month" => month, "day" => day, "year" => year} = Regex.named_captures @patterns[:date], date
     %{"hour" => hour, "minute" => minute, "meridiem" => meridiem} = Regex.named_captures @patterns[:time], time
 
-    month = :io.fwrite "~9..0f~n", [month]
-    day = :io.fwrite "~9..0f~n", [day]
-
     hour = case meridiem do
       "am" -> hour
       "pm" ->
         {hour, _} = Integer.parse hour
         "#{hour + 12}"
     end
+
     hour = :string.pad hour, 2, :trailing, "0"
+    month = :string.pad month, 2, :trailing, "0"
+    day = :string.pad day, 2, :trailing, "0"
 
     {:ok, DateTime.from_naive("#{year}-#{month}-#{day} #{hour}:#{minute}:00", "Etc/UTC")}
   end
