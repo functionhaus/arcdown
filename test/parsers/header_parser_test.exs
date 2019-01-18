@@ -89,5 +89,10 @@ defmodule HeaderParserTest do
       {%Article{summary: summary},  _} = HeaderParser.parse_optional {%Article{}, context[:header]}, :summary
       assert summary == "A sci-fi classic about a flying saucer landing in Washington, D.C."
     end
+
+    test "returns nil if no summary is present" do
+      {%Article{summary: summary},  _} = HeaderParser.parse_optional {%Article{}, ""}, :summary
+      assert summary == nil
+    end
   end
 end
