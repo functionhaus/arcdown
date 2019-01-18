@@ -8,10 +8,7 @@ defmodule Arcdown.Parsers.ArticleParser do
   alias Arcdown.Article
   alias Arcdown.Parsers.HeaderParser
 
-  @patterns %{
-    article: ~r/(?<header>i^.*)\n{2}---\n{2}(?<content>.*$)/,
-    divider: ~r/\n{2}---\n{2}/
-  }
+  @divider_pattern ~r/\n{2}---\n{2}/
 
   @doc """
   Read a full Arcdown article from a given filee path, split the header and
@@ -36,6 +33,6 @@ defmodule Arcdown.Parsers.ArticleParser do
 
   @spec split_parts(binary()) :: {atom(), binary(), binary()}
   def split_parts article_text do
-    Regex.split @patterns[:divider], article_text, parts: 2
+    Regex.split @divider_pattern, article_text, parts: 2
   end
 end
