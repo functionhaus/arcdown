@@ -17,6 +17,18 @@ defmodule HeaderParserTest do
       assert title == "The Day the Earth Stood Still"
     end
 
+    test "matches a title with numbers" do
+      header = "12 Angry Men"
+      {%Article{title: title},  _} = HeaderParser.parse_optional {%Article{}, header}, :title
+      assert title == "12 Angry Men"
+    end
+
+    test "matches one-character titles" do
+      header = "A"
+      {%Article{title: title},  _} = HeaderParser.parse_optional {%Article{}, header}, :title
+      assert title == "A"
+    end
+
     test "returns no title if empty" do
       {%Article{title: title},  _} = HeaderParser.parse_optional {%Article{}, ""}, :title
       assert title == nil

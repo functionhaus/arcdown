@@ -6,7 +6,7 @@ defmodule Arcdown.Parsers.HeaderParser do
   @moduledoc "Parser module for the header block of a string of Arcdown text."
 
   @patterns %{
-    title: ~r/(?<title>^[\w\s]+[\w]+)\ ?\<?[a-z0-9\-]*\>?(\n|$)/,
+    title: ~r/(?<title>^[\w\s\d]*[\w\d]+)\ ?\<?[a-z0-9\-]*\>?(\n|$)/,
     slug: ~r/^[\w\s]*\<(?<slug>[a-z0-9\-]+)\>(\n|$)/,
     author: ~r/\nby\ (?<author>[\w\s]+[\w]+)\ ?\<.*\>?(\n|$)/,
     email: ~r/\nby\ [\w\s]+\<(?<email>.*)\>(\n|$)/,
