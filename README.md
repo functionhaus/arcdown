@@ -20,11 +20,10 @@ Arcdown supports the following features:
 * title
 * url slug
 * author name and email
-* topics
-* sub-topics
+* topics and sub-topics
 * tags
 * article summary
-* article body/content.
+* article content
 
 Here is an example article written in *Arcdown (.ad)* format:
 
