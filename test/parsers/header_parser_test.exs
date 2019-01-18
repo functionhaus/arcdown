@@ -21,12 +21,30 @@ defmodule HeaderParserTest do
       {%Article{title: title},  _} = HeaderParser.parse_optional {%Article{}, ""}, :title
       assert title == nil
     end
+
+    test "does not return the slug if title is missing" do
+      header = "<this-is-just-a-slug>"
+      {%Article{title: title},  _} = HeaderParser.parse_optional {%Article{}, header}, :title
+      assert title == nil
+    end
   end
 
   describe "parsing the slug" do
     test "parses the slug", context do
       {%Article{slug: slug},  _} = HeaderParser.parse_optional {%Article{}, context[:header]}, :slug
       assert slug == "the-day-the-earth-stood-still"
+    end
+
+    test "parses a missing slug as nil" do
+      header = "This Header Has No Slug"
+      {%Article{slug: slug},  _} = HeaderParser.parse_optional {%Article{}, header}, :slug
+      assert slug == nil
+    end
+
+    test "parses a slug even when no title is present" do
+      header = "<some-slug>"
+      {%Article{slug: slug},  _} = HeaderParser.parse_optional {%Article{}, header}, :slug
+      assert slug == "some-slug"
     end
   end
 

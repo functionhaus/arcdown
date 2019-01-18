@@ -6,14 +6,14 @@ defmodule Arcdown.Parsers.HeaderParser do
   @moduledoc "Parser module for the header block of a string of Arcdown text."
 
   @patterns %{
-    title: ~r/(?<title>^[\w\s]+[\w]+)\ ?\<?[a-z0-9\-]*\>?[\n$]/,
-    slug: ~r/^[\w\s]+\<(?<slug>[a-z0-9\-]+)\>[\n$]/,
-    author: ~r/\nby\ (?<author>[\w\s]+[\w]+)\ ?\<.*\>?[\n$]/,
-    email: ~r/\nby\ [\w\s]+\<(?<email>.*)\>[\n$]/,
-    created_at: ~r/\nCreated @ (?<time>\d{1,2}:\d{2}[ap]m) on (?<date>\d{1,2}\/\d{2}\/\d{4})[\n$]/,
-    published_at: ~r/\nPublished @ (?<time>\d{1,2}:\d{2}[ap]m) on (?<date>\d{1,2}\/\d{2}\/\d{4})[\n$]/,
+    title: ~r/(?<title>^[\w\s]+[\w]+)\ ?\<?[a-z0-9\-]*\>?(\n|$)/,
+    slug: ~r/^[\w\s]*\<(?<slug>[a-z0-9\-]+)\>(\n|$)/,
+    author: ~r/\nby\ (?<author>[\w\s]+[\w]+)\ ?\<.*\>?(\n|$)/,
+    email: ~r/\nby\ [\w\s]+\<(?<email>.*)\>(\n|$)/,
+    created_at: ~r/\nCreated @ (?<time>\d{1,2}:\d{2}[ap]m) on (?<date>\d{1,2}\/\d{2}\/\d{4})(\n|$)/,
+    published_at: ~r/\nPublished @ (?<time>\d{1,2}:\d{2}[ap]m) on (?<date>\d{1,2}\/\d{2}\/\d{4})(\n|$)/,
     summary: ~r/Summary:\n(?<summary>.*)$/,
-    topics: ~r/Filed under: (?<topics>[\w\s\d->]+)[\n$]/
+    topics: ~r/Filed under: (?<topics>[\w\s\d->]+)(\n|$)/
   }
 
   @doc "Parses a raw header string into an Article struct"
