@@ -47,6 +47,11 @@ defmodule HeaderParserTest do
       {%Article{topics: topics},  _} = HeaderParser.parse_topics{%Article{}, context[:header]}
       assert topics == ["Films", "Sci-Fi", "Classic"]
     end
+
+    test "returns no topics if not present" do
+      {%Article{topics: topics},  _} = HeaderParser.parse_topics {%Article{}, ""}
+      assert topics == []
+    end
   end
 
   describe "parsing tags" do
@@ -55,7 +60,7 @@ defmodule HeaderParserTest do
       assert tags == [:sci_fi, :horror, :thrillers, :aliens]
     end
 
-    test "returns no tags if not present" do
+    test "returns an empty list if no tags are present" do
       {%Article{tags: tags},  _} = HeaderParser.parse_tags {%Article{}, ""}
       assert tags == []
     end

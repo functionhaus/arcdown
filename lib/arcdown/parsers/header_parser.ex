@@ -103,11 +103,14 @@ defmodule Arcdown.Parsers.HeaderParser do
   """
   @spec parse_topics({Article.t(), binary()}) :: {Article.t(), binary()}
   def parse_topics({article, header}) do
-    %{"topics" => topics} = Regex.named_captures @patterns[:topics], header
+    topics_list = case Regex.named_captures @patterns[:topics], header do
+      %{"topics" => topics} ->
+        topics
+          |> String.split(" > ", trim: true)
+          |> Enum.map(&(String.trim &1))
 
-    topics_list = topics
-      |> String.split(" > ", trim: true)
-      |> Enum.map(&(String.trim &1))
+      nil -> []
+    end
 
     {Map.put(article, :topics, topics_list), header}
   end
