@@ -1,8 +1,8 @@
 defmodule Arcdown.Parsers.HeaderParser do
   alias Arcdown.Article
+  alias Arcdown.Parsers.DateTimeParser
 
-  @moduledoc """
-  """
+  @moduledoc "Parser module for the header block of a string of Arcdown text."
 
   @patterns %{
     title: ~r/(?<title>^[\w\s]+[\w]+)\ ?\<?[a-z0-9\-]*\>?\n/,
@@ -11,8 +11,6 @@ defmodule Arcdown.Parsers.HeaderParser do
     email: ~r/\nby\ [\w\s]+\<(?<email>.*)\>\n/,
     created_at: ~r/\nCreated @ (?<time>\d{1,2}:\d{2}[ap]m) on (?<date>\d{1,2}\/\d{2}\/\d{4})\n/,
     published_at: ~r/\nPublished @ (?<time>\d{1,2}:\d{2}[ap]m) on (?<date>\d{1,2}\/\d{2}\/\d{4})\n/,
-    date: ~r/(?<month>\d{1,2})\/(?<day>\d{2})\/(?<year>\d{4})$/,
-    time: ~r/(?<hour>\d{1,2}):(?<minute>\d{2})(?<meridiem>[ap]m)$/,
     content: ~r/\n{2}---\n{2}(?<content>.*)$/
   }
 
@@ -30,6 +28,13 @@ defmodule Arcdown.Parsers.HeaderParser do
       |> parse_summary
   end
 
+  @doc """
+  Provide an %Article{} struct, header string, and attribute atom as input,
+  expecting the attribute pattern to match text found in the article string.
+
+  Will return an error if no text is found matching the attribute pattern.
+  """
+  @spec parse_required({Article.t(), binary()}, atom()) :: {Article.t(), binary()}
   def parse_required({article, header}, attr) do
     attr_string = Atom.to_string(attr)
 
@@ -37,6 +42,14 @@ defmodule Arcdown.Parsers.HeaderParser do
     {Map.put(article, attr, captured), header}
   end
 
+  @doc """
+  Provide an %Article{} struct, header string, and attribute atom as input,
+  expecting the attribute pattern to match text found in the article string.
+
+  If no text is found in the header string that matches the pattern for the
+  given attribute, the original %Article{} struct will be returned instead.
+  """
+  @spec parse_optional({Article.t(), binary()}, atom()) :: {Article.t(), binary()}
   def parse_optional({article, header}, attr) do
     attr_string = Atom.to_string(attr)
 
@@ -48,28 +61,21 @@ defmodule Arcdown.Parsers.HeaderParser do
     end
   end
 
+  @doc """
+  Provide an %Article{} struct, header string, and attribute atom as input,
+  expecting the attribute pattern to match text found in the article string.
+
+  If no text is found in the header string that matches the pattern for the
+  given attribute, the original %Article{} struct will be returned instead.
+
+  Matching patterns are parsed and returned as timestamps, and applied to the
+  matching attribute name in the %Article{} struct.
+  """
+  @spec parse_timestamp({Article.t(), binary()}, atom()) :: {Article.t(), binary()}
   def parse_timestamp({article, header}, attr) do
     %{"time" => time, "date" => date} = Regex.named_captures @patterns[attr], header
-    {:ok, datetime} = parse_datetime date, time
+    {:ok, datetime} = DateTimeParser.parse_human_12h date, time
     {Map.put(article, attr, datetime), header}
-  end
-
-  def parse_datetime(date, time) do
-    %{"month" => month, "day" => day, "year" => year} = Regex.named_captures @patterns[:date], date
-    %{"hour" => hour, "minute" => minute, "meridiem" => meridiem} = Regex.named_captures @patterns[:time], time
-
-    hour = case meridiem do
-      "am" -> hour
-      "pm" ->
-        {hour, _} = Integer.parse hour
-        "#{hour + 12}"
-    end
-
-    hour = :string.pad hour, 2, :trailing, "0"
-    month = :string.pad month, 2, :trailing, "0"
-    day = :string.pad day, 2, :trailing, "0"
-
-    {:ok, DateTime.from_naive("#{year}-#{month}-#{day} #{hour}:#{minute}:00", "Etc/UTC")}
   end
 
   def parse_tags(_) do
