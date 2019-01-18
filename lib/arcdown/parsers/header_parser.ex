@@ -1,5 +1,5 @@
 defmodule Arcdown.Parsers.MetadataParser do
-  alias Arcdown.Metadata
+  alias Arcdown.Article
 
   @moduledoc """
   A module for parsing a raw metadata value into YAML, formatting its keys and
@@ -19,9 +19,29 @@ defmodule Arcdown.Parsers.MetadataParser do
   }
 
   @doc "Parses a raw metadata string and formats it as a struct"
-  @spec parse_raw(binary()) :: Metadata.t()
-  def parse_raw(raw_header) do
-    {%Metadata{}, raw_header}
+  @spec parse_raw(binary()) :: Article.t()
+  def parse_raw(article_text) do
+    {:ok, header, content} = Regex.split(@divider_pattern, file_text, parts: 2)
+
+    parse_header(header)
+    |> Enum.into(%Article{content: parsed_content})
+
+    {%Article{}, header}
+      |> parse_required(:title)
+      |> parse_optional(:slug)
+      |> parse_optional(:author)
+      |> parse_optional(:email)
+      |> parse_timestamp(:created_at)
+      |> parse_timestamp(:published_at)
+      |> parse_tags
+      |> parse_summary
+      |> parse_content
+  end
+
+  @doc "Parses a raw metadata string and formats it as a struct"
+  @spec parse_raw(binary()) :: Article.t()
+  def parse_header(raw_header) do
+    {%Article{}, raw_header}
       |> parse_required(:title)
       |> parse_optional(:slug)
       |> parse_optional(:author)
