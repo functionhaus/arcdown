@@ -1,9 +1,7 @@
-defmodule Arcdown.Parsers.MetadataParser do
+defmodule Arcdown.Parsers.HeaderParser do
   alias Arcdown.Article
 
   @moduledoc """
-  A module for parsing a raw metadata value into YAML, formatting its keys and
-  values, and returning a %Metadata{} struct.
   """
 
   @patterns %{
@@ -18,15 +16,10 @@ defmodule Arcdown.Parsers.MetadataParser do
     content: ~r/\n{2}---\n{2}(?<content>.*)$/
   }
 
-  @doc "Parses a raw metadata string and formats it as a struct"
-  @spec parse_raw(binary()) :: Article.t()
-  def parse_raw(article_text) do
-    {:ok, header, content} = Regex.split(@divider_pattern, file_text, parts: 2)
-
-    parse_header(header)
-    |> Enum.into(%Article{content: parsed_content})
-
-    {%Article{}, header}
+  @doc "Parses a raw header string into an Article struct"
+  @spec parse_header(binary()) :: Article.t()
+  def parse_header(header, article \\ %Article{}) do
+    {article, header}
       |> parse_required(:title)
       |> parse_optional(:slug)
       |> parse_optional(:author)
@@ -35,46 +28,30 @@ defmodule Arcdown.Parsers.MetadataParser do
       |> parse_timestamp(:published_at)
       |> parse_tags
       |> parse_summary
-      |> parse_content
   end
 
-  @doc "Parses a raw metadata string and formats it as a struct"
-  @spec parse_raw(binary()) :: Article.t()
-  def parse_header(raw_header) do
-    {%Article{}, raw_header}
-      |> parse_required(:title)
-      |> parse_optional(:slug)
-      |> parse_optional(:author)
-      |> parse_optional(:email)
-      |> parse_timestamp(:created_at)
-      |> parse_timestamp(:published_at)
-      |> parse_tags
-      |> parse_summary
-      |> parse_content
-  end
-
-  def parse_required({metadata, header}) do
+  def parse_required({article, header}) do
     attr_string = Atom.to_string(attr)
 
     %{^attr_string => captured} = Regex.named_captures @patterns[attr], header
-    {Map.put(metadata, attr, captured), header}
+    {Map.put(article, attr, captured), header}
   end
 
-  def parse_optional({metadata, header}, attr) do
+  def parse_optional({article, header}, attr) do
     attr_string = Atom.to_string(attr)
 
     case Regex.named_captures(@patterns[attr], header) do
       %{^attr_string => captured} ->
-        {Map.put(metadata, attr, captured), header}
+        {Map.put(article, attr, captured), header}
       nil ->
-        {metadata, header}
+        {article, header}
     end
   end
 
-  def parse_timestamp({metadata, header}, attr) do
+  def parse_timestamp({article, header}, attr) do
     %{"time" => time, "date" => date} = Regex.named_captures @patterns[attr], header
     {:ok, datetime} = parse_datetime date, time
-    {Map.put(metadata, attr, datetime), header}
+    {Map.put(article, attr, datetime), header}
   end
 
   def parse_datetime(date) do

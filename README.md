@@ -50,7 +50,6 @@ A sci-fi classic about a flying saucer landing in Washington, D.C.
 The Day the Earth Stood Still (a.k.a. Farewell to the Master and Journey to the
 World) is a 1951 American black-and-white science fiction film from 20th Century
 Fox, produced by Julian Blaustein and directed by Robert Wise.
-
 ```
 
 Arcdown doesn't presume that you want to parse the Article content/body in any

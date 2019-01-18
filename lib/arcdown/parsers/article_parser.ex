@@ -6,32 +6,36 @@ defmodule Arcdown.Parsers.ArticleParser do
   """
 
   alias Arcdown.Article
-  alias Arcdown.Parsers.MetadataParser
+  alias Arcdown.Parsers.HeaderParser
 
-  @divider_pattern ~r/\n---\n/
+  @patterns %{
+    article: ~r/(?<header>i^.*)\n{2}---\n{2}(?<content>.*$)/,
+    divider: ~r/\n{2}---\n{2}/
+  }
 
-  @doc "Take in a filename, split the contents, and build the %Article struct."
+  @doc """
+  Read a full Arcdown article from a given filee path, split the header and
+  content, construct an Article with content, and parse the header data.
+  """
   @spec parse_file(binary()) :: Article.t()
   def parse_file path do
-    path
-      |> File.read
-      |> split_parts
-      |> build_article
+    {:ok, file_text} = File.read path
+    parse_string file_text
   end
 
-  @spec split_parts({:ok, binary()}) :: {:ok, binary(), binary()}
-  defp split_parts {:ok, file_text} do
-    Regex.split(@divider_pattern, file_text, parts: 2)
+  @doc """
+  Take in a full Arcdown article as a single string, split the header and
+  content, construct an Article with content, and parse the header data.
+  """
+  @spec parse_string(binary()) :: Article.t()
+  def parse_string article_text do
+    {:ok, header, content} = split_parts article_text
+
+    HeaderParser.parse_header header, %Article{:content: content}
   end
 
-
-  @spec build_article({:ok, binary(), binary()}) :: Article.t()
-  defp build_article {:ok, metadata, content} do
-    {:ok, parsed_content, _} = content
-      |> String.trim
-      |> Earmark.as_html
-
-    MetadataParser.parse_raw(metadata)
-    |> Enum.into(%Article{content: parsed_content})
+  @spec split_parts(binary()) :: {atom(), binary(), binary()}
+  def split_parts article_text do
+    Regex.split @patterns[:divider], article_text, parts: 2
   end
 end
