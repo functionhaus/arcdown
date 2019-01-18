@@ -35,4 +35,9 @@ defmodule HeaderParserTest do
     {%Article{tags: tags},  _} = HeaderParser.parse_tags{%Article{}, context[:header]}
     assert tags == [:sci_fi, :horror, :thrillers, :aliens]
   end
+
+  test "parses the summary", context do
+    {%Article{summary: summary},  _} = HeaderParser.parse_optional {%Article{}, context[:header]}, :summary
+    assert summary == "A sci-fi classic about a flying saucer landing in Washington, D.C."
+  end
 end
