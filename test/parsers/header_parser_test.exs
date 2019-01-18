@@ -1,7 +1,7 @@
 defmodule HeaderParserTest do
   use ExUnit.Case
-  alias Arcdown.Parsers.HeaderParser
   alias Arcdown.Article
+  alias Arcdown.Parsers.HeaderParser
 
   setup do
     {:ok, header} = "test/support/headers/complete.ad"
@@ -101,7 +101,6 @@ defmodule HeaderParserTest do
   describe "parsing datetimes" do
     test "parses the created_at time", context do
       {%Article{created_at: created_at},  _} = HeaderParser.parse_datetime {%Article{}, context[:header]}, :created_at
-
       assert created_at == %DateTime{
         hour: 22,
         minute: 24,
@@ -117,12 +116,14 @@ defmodule HeaderParserTest do
     end
 
     test "returns nil if created_at is not present" do
-      {%Article{created_at: created_at},  _} = HeaderParser.parse_datetime {%Article{}, ""}, :created_at
-      assert created_at == created_at
+      {%Article{created_at: created_at},  _} = HeaderParser.parse_datetime \
+        {%Article{}, ""}, :created_at
+      assert created_at == nil
     end
 
     test "parses the published_at time", context do
-      {%Article{published_at: published_at},  _} = HeaderParser.parse_datetime {%Article{}, context[:header]}, :published_at
+      {%Article{published_at: published_at},  _} = HeaderParser.parse_datetime \
+        {%Article{}, context[:header]}, :published_at
 
       assert published_at == %DateTime{
         hour: 4,
@@ -139,15 +140,16 @@ defmodule HeaderParserTest do
     end
 
     test "returns nil if published_at is not present" do
-      {%Article{published_at: published_at},  _} = HeaderParser.parse_datetime {%Article{}, ""}, :published_at
-      assert published_at == published_at
+      {%Article{published_at: published_at},  _} = HeaderParser.parse_datetime \
+        {%Article{}, ""}, :published_at
+      assert published_at == nil
     end
 
   end
 
   describe "parsing tags" do
     test "parses the article tags", context do
-      {%Article{tags: tags},  _} = HeaderParser.parse_tags{%Article{}, context[:header]}
+      {%Article{tags: tags},  _} = HeaderParser.parse_tags {%Article{}, context[:header]}
       assert tags == [:sci_fi, :horror, :thrillers, :aliens]
     end
 
@@ -159,7 +161,8 @@ defmodule HeaderParserTest do
 
   describe "parsing the summary" do
     test "parses the summary", context do
-      {%Article{summary: summary},  _} = HeaderParser.parse_optional {%Article{}, context[:header]}, :summary
+      {%Article{summary: summary},  _} = HeaderParser.parse_optional \
+        {%Article{}, context[:header]}, :summary
       assert summary == "A sci-fi classic about a flying saucer landing in Washington, D.C."
     end
 

@@ -15,9 +15,7 @@ defmodule Arcdown.Parsers.TagParser do
   """
   def from_header(header) do
     tags = Regex.scan(@tag_pattern, header)
-      |> parse_list
-
-    {:ok, tags}
+    {:ok, parse_list(tags)}
   end
 
   @doc ~S"""
