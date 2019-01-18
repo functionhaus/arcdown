@@ -31,4 +31,8 @@ defmodule HeaderParserTest do
     assert author_email == "julian@blaustein.com"
   end
 
+  test "parses the article tags", context do
+    {%Article{tags: tags},  _} = HeaderParser.parse_tags{%Article{}, context[:header]}
+    assert tags == [:sci_fi, :horror, :thrillers, :aliens]
+  end
 end

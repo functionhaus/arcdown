@@ -1,6 +1,7 @@
 defmodule Arcdown.Parsers.HeaderParser do
   alias Arcdown.Article
   alias Arcdown.Parsers.DateTimeParser
+  alias Arcdown.Parsers.TagParser
 
   @moduledoc "Parser module for the header block of a string of Arcdown text."
 
@@ -10,8 +11,7 @@ defmodule Arcdown.Parsers.HeaderParser do
     author: ~r/\nby\ (?<author>[\w\s]+[\w]+)\ ?\<.*\>?\n/,
     email: ~r/\nby\ [\w\s]+\<(?<email>.*)\>\n/,
     created_at: ~r/\nCreated @ (?<time>\d{1,2}:\d{2}[ap]m) on (?<date>\d{1,2}\/\d{2}\/\d{4})\n/,
-    published_at: ~r/\nPublished @ (?<time>\d{1,2}:\d{2}[ap]m) on (?<date>\d{1,2}\/\d{2}\/\d{4})\n/,
-    content: ~r/\n{2}---\n{2}(?<content>.*)$/
+    published_at: ~r/\nPublished @ (?<time>\d{1,2}:\d{2}[ap]m) on (?<date>\d{1,2}\/\d{2}\/\d{4})\n/
   }
 
   @doc "Parses a raw header string into an Article struct"
@@ -78,7 +78,10 @@ defmodule Arcdown.Parsers.HeaderParser do
     {Map.put(article, attr, datetime), header}
   end
 
-  def parse_tags(_) do
+  @spec parse_tags({Article.t(), binary()}) :: {Article.t(), binary()}
+  def parse_tags({article, header}) do
+    {:ok, tags} = TagParser.from_header(header)
+    {Map.put(article, :tags, tags), header}
   end
 
   def parse_summary(_) do
