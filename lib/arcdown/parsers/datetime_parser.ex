@@ -21,9 +21,9 @@ defmodule Arcdown.Parsers.DateTimeParser do
         "#{hour + 12}"
     end
 
-    hour = :string.pad hour, 2, :trailing, "0"
-    month = :string.pad month, 2, :trailing, "0"
-    day = :string.pad day, 2, :trailing, "0"
+    hour = :string.pad hour, 2, :leading, "0"
+    month = :string.pad month, 2, :leading, "0"
+    day = :string.pad day, 2, :leading, "0"
 
     {:ok, DateTime.from_naive("#{year}-#{month}-#{day} #{hour}:#{minute}:00", "Etc/UTC")}
   end
