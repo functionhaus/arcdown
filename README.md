@@ -31,7 +31,7 @@ Here is an example article written in *Arcdown (.ad)* format:
 The Day the Earth Stood Still <the-day-the-earth-stood-still>
 by Julian Blaustein <julian@blaustein.com>
 
-filed under Films > Sci-Fi > Classic
+Filed under: Films > Sci-Fi > Classic
 
 Created @ 10:24pm on 1/20/2019
 Published @ 10:20pm on 1/20/2019

@@ -6,13 +6,14 @@ defmodule Arcdown.Parsers.HeaderParser do
   @moduledoc "Parser module for the header block of a string of Arcdown text."
 
   @patterns %{
-    title: ~r/(?<title>^[\w\s]+[\w]+)\ ?\<?[a-z0-9\-]*\>?\n/,
-    slug: ~r/^[\w\s]+\<(?<slug>[a-z0-9\-]+)\>\n/,
-    author: ~r/\nby\ (?<author>[\w\s]+[\w]+)\ ?\<.*\>?\n/,
-    email: ~r/\nby\ [\w\s]+\<(?<email>.*)\>\n/,
-    created_at: ~r/\nCreated @ (?<time>\d{1,2}:\d{2}[ap]m) on (?<date>\d{1,2}\/\d{2}\/\d{4})\n/,
-    published_at: ~r/\nPublished @ (?<time>\d{1,2}:\d{2}[ap]m) on (?<date>\d{1,2}\/\d{2}\/\d{4})\n/,
-    summary: ~r/Summary:\n(?<summary>.*)$/
+    title: ~r/(?<title>^[\w\s]+[\w]+)\ ?\<?[a-z0-9\-]*\>?[\n$]/,
+    slug: ~r/^[\w\s]+\<(?<slug>[a-z0-9\-]+)\>[\n$]/,
+    author: ~r/\nby\ (?<author>[\w\s]+[\w]+)\ ?\<.*\>?[\n$]/,
+    email: ~r/\nby\ [\w\s]+\<(?<email>.*)\>[\n$]/,
+    created_at: ~r/\nCreated @ (?<time>\d{1,2}:\d{2}[ap]m) on (?<date>\d{1,2}\/\d{2}\/\d{4})[\n$]/,
+    published_at: ~r/\nPublished @ (?<time>\d{1,2}:\d{2}[ap]m) on (?<date>\d{1,2}\/\d{2}\/\d{4})[\n$]/,
+    summary: ~r/Summary:\n(?<summary>.*)$/,
+    topics: ~r/Filed under: (?<topics>[\w\s\d->]+)[\n$]/
   }
 
   @doc "Parses a raw header string into an Article struct"
@@ -23,6 +24,7 @@ defmodule Arcdown.Parsers.HeaderParser do
       |> parse_optional(:slug)
       |> parse_optional(:author)
       |> parse_optional(:email)
+      |> parse_topics
       |> parse_timestamp(:created_at)
       |> parse_timestamp(:published_at)
       |> parse_tags
@@ -90,5 +92,23 @@ defmodule Arcdown.Parsers.HeaderParser do
   def parse_tags({article, header}) do
     {:ok, tags} = TagParser.from_header(header)
     {Map.put(article, :tags, tags), header}
+  end
+
+  @doc """
+  Provide an %Article{} struct and header string as input and match any topics
+  found, parse them, and return them as a formatted list of strings.
+
+  If no topics are found in the header string the original %Article{} struct
+  will be returned instead.
+  """
+  @spec parse_topics({Article.t(), binary()}) :: {Article.t(), binary()}
+  def parse_topics({article, header}) do
+    %{"topics" => topics} = Regex.named_captures @patterns[:topics], header
+
+    topics_list = topics
+      |> String.split(" > ", trim: true)
+      |> Enum.map(&(String.trim &1))
+
+    {Map.put(article, :topics, topics_list), header}
   end
 end
