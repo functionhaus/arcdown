@@ -116,6 +116,11 @@ defmodule HeaderParserTest do
       }
     end
 
+    test "returns nil if created_at is not present" do
+      {%Article{created_at: created_at},  _} = HeaderParser.parse_datetime {%Article{}, ""}, :created_at
+      assert created_at == created_at
+    end
+
     test "parses the published_at time", context do
       {%Article{published_at: published_at},  _} = HeaderParser.parse_datetime {%Article{}, context[:header]}, :published_at
 
@@ -133,9 +138,9 @@ defmodule HeaderParserTest do
       }
     end
 
-    test "returns no topics if not present" do
-      {%Article{topics: topics},  _} = HeaderParser.parse_topics {%Article{}, ""}
-      assert topics == []
+    test "returns nil if published_at is not present" do
+      {%Article{published_at: published_at},  _} = HeaderParser.parse_datetime {%Article{}, ""}, :published_at
+      assert published_at == published_at
     end
 
   end

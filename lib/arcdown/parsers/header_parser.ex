@@ -76,9 +76,13 @@ defmodule Arcdown.Parsers.HeaderParser do
   """
   @spec parse_datetime({Article.t(), binary()}, atom()) :: {Article.t(), binary()}
   def parse_datetime({article, header}, attr) do
-    %{"time" => time, "date" => date} = Regex.named_captures @patterns[attr], header
-    {:ok, datetime, _offset} = DateTimeParser.parse_human_12h date, time
-    {Map.put(article, attr, datetime), header}
+    case Regex.named_captures @patterns[attr], header do
+      %{"time" => time, "date" => date} ->
+        {:ok, datetime, _offset} = DateTimeParser.parse_human_12h date, time
+        {Map.put(article, attr, datetime), header}
+      nil ->
+        {article, header}
+    end
   end
 
   @doc """
