@@ -20,7 +20,7 @@ defmodule Arcdown.Parsers.HeaderParser do
   @spec parse_header(binary()) :: Article.t()
   def parse_header(header, article \\ %Article{}) do
     {article, header}
-      |> parse_required(:title)
+      |> parse_optional(:title)
       |> parse_optional(:slug)
       |> parse_optional(:author)
       |> parse_optional(:email)
