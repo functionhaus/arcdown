@@ -1,5 +1,7 @@
 # Arcdown
 
+[![CircleCI](https://circleci.com/gh/functionhaus/arcdown.svg?style=svg)](https://circleci.com/gh/functionhaus/arcdown)
+
 Arcdown is a parsing library for articles written in Arcdown (.ad) format.
 
 It is written in pure Elixir/Erlang with no additional dependencies when being
