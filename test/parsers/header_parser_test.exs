@@ -66,9 +66,23 @@ defmodule HeaderParserTest do
       assert author == "Julian Blaustein"
     end
 
+    test "returns nil if no author is included" do
+      header = "Some Title\n<no@author.com>"
+      {%Article{author: author},  _} = HeaderParser.parse_optional {%Article{}, header}, :author
+      assert author == nil
+    end
+  end
+
+  describe "parsing the author email" do
     test "parses the author's email", context do
       {%Article{email: author_email},  _} = HeaderParser.parse_optional {%Article{}, context[:header]}, :email
       assert author_email == "julian@blaustein.com"
+    end
+
+    test "returns nil if no author email is included" do
+      header = "Some Title\nby Author Minn\n"
+      {%Article{email: email},  _} = HeaderParser.parse_optional {%Article{}, header}, :email
+      assert email == nil
     end
   end
 
