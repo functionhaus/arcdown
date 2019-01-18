@@ -7,13 +7,13 @@ defmodule Arcdown.Parsers.HeaderParser do
 
   @patterns %{
     title: ~r/(?<title>^[\w\s\d]*[\w\d]+)\ ?\<?[a-z0-9\-]*\>?(\n|$)/,
-    slug: ~r/^[\w\s]*\<(?<slug>[a-z0-9\-]+)\>(\n|$)/,
-    author: ~r/\nby\ (?<author>[\w\s]+[\w]+)\ ?\<.*\>?(\n|$)/,
-    email: ~r/\nby\ [\w\s]+\<(?<email>.*)\>(\n|$)/,
-    created_at: ~r/\nCreated @ (?<time>\d{1,2}:\d{2}[ap]m) on (?<date>\d{1,2}\/\d{2}\/\d{4})(\n|$)/,
-    published_at: ~r/\nPublished @ (?<time>\d{1,2}:\d{2}[ap]m) on (?<date>\d{1,2}\/\d{2}\/\d{4})(\n|$)/,
-    summary: ~r/Summary:\n(?<summary>.*)$/,
-    topics: ~r/Filed under: (?<topics>[\w\s\d->]+)(\n|$)/
+    slug: ~r/^[\w\s\d]*\<(?<slug>[a-z0-9\-]+)\>(\n|$)/,
+    author: ~r/(\n|^)by\ (?<author>[\w\s\d]*[\w\d]+)\ ?\<.*\>?(\n|$)/,
+    email: ~r/(\n|^)by\ [\w\s\d]*\<(?<email>.*\@.*\..*)\>(\n|$)/,
+    created_at: ~r/(\n|^)Created @ (?<time>\d{1,2}:\d{2}[ap]m) on (?<date>\d{1,2}\/\d{2}\/\d{4})(\n|$)/,
+    published_at: ~r/(\n|^)Published @ (?<time>\d{1,2}:\d{2}[ap]m) on (?<date>\d{1,2}\/\d{2}\/\d{4})(\n|$)/,
+    summary: ~r/(\n|^)Summary:\n(?<summary>.*)$/,
+    topics: ~r/(\n|^)Filed under: (?<topics>[\w\s\d->]+)(\n|$)/
   }
 
   @doc "Parses a raw header string into an Article struct"
