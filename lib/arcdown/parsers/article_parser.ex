@@ -31,7 +31,7 @@ defmodule Arcdown.Parsers.ArticleParser do
   def parse_string article_text do
     {:ok, header, content} = split_parts article_text
 
-    HeaderParser.parse_header header, %Article{:content: content}
+    HeaderParser.parse_header header, %Article{content: content}
   end
 
   @spec split_parts(binary()) :: {atom(), binary(), binary()}

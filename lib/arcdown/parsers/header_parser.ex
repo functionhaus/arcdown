@@ -30,7 +30,7 @@ defmodule Arcdown.Parsers.HeaderParser do
       |> parse_summary
   end
 
-  def parse_required({article, header}) do
+  def parse_required({article, header}, attr) do
     attr_string = Atom.to_string(attr)
 
     %{^attr_string => captured} = Regex.named_captures @patterns[attr], header
@@ -54,7 +54,7 @@ defmodule Arcdown.Parsers.HeaderParser do
     {Map.put(article, attr, datetime), header}
   end
 
-  def parse_datetime(date) do
+  def parse_datetime(date, time) do
     %{"month" => month, "day" => day, "year" => year} = Regex.named_captures @patterns[:date], date
     %{"hour" => hour, "minute" => minute, "meridiem" => meridiem} = Regex.named_captures @patterns[:time], time
 
@@ -67,9 +67,9 @@ defmodule Arcdown.Parsers.HeaderParser do
         {hour, _} = Integer.parse hour
         "#{hour + 12}"
     end
-    hour = :io.fwrite "~9..0f~n", [day]
+    hour = :string.pad hour, 2, :trailing, "0"
 
-    {:ok, Datetime.from_naive(~n[#{year}-#{month}-#{day} #{hour}:#{minute}:00], "Etc/UTC")}
+    {:ok, DateTime.from_naive("#{year}-#{month}-#{day} #{hour}:#{minute}:00", "Etc/UTC")}
   end
 
   def parse_tags(_) do
