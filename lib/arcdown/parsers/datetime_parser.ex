@@ -5,7 +5,7 @@ defmodule Arcdown.Parsers.DateTimeParser do
   """
 
   @patterns %{
-    date: ~r/(?<month>\d{1,2})\/(?<day>\d{2})\/(?<year>\d{4})$/,
+    date: ~r/(?<month>\d{1,2})\/(?<day>\d{1,2})\/(?<year>\d{4})$/,
     time: ~r/(?<hour>\d{1,2}):(?<minute>\d{2})(?<meridiem>[ap]m)$/
   }
 
@@ -25,6 +25,6 @@ defmodule Arcdown.Parsers.DateTimeParser do
     month = :string.pad month, 2, :leading, "0"
     day = :string.pad day, 2, :leading, "0"
 
-    {:ok, DateTime.from_naive("#{year}-#{month}-#{day} #{hour}:#{minute}:00", "Etc/UTC")}
+    DateTime.from_iso8601("#{year}-#{month}-#{day}T#{hour}:#{minute}:00Z")
   end
 end

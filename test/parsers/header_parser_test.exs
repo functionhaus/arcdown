@@ -88,7 +88,7 @@ defmodule HeaderParserTest do
 
   describe "parsing topics" do
     test "parses the article topics", context do
-      {%Article{topics: topics},  _} = HeaderParser.parse_topics{%Article{}, context[:header]}
+      {%Article{topics: topics},  _} = HeaderParser.parse_topics {%Article{}, context[:header]}
       assert topics == ["Films", "Sci-Fi", "Classic"]
     end
 
@@ -96,6 +96,48 @@ defmodule HeaderParserTest do
       {%Article{topics: topics},  _} = HeaderParser.parse_topics {%Article{}, ""}
       assert topics == []
     end
+  end
+
+  describe "parsing datetimes" do
+    test "parses the created_at time", context do
+      {%Article{created_at: created_at},  _} = HeaderParser.parse_datetime {%Article{}, context[:header]}, :created_at
+
+      assert created_at == %DateTime{
+        hour: 22,
+        minute: 24,
+        second: 0,
+        month: 1,
+        day: 20,
+        year: 2019,
+        time_zone: "Etc/UTC",
+        utc_offset: 0,
+        std_offset: 0,
+        zone_abbr: "UTC"
+      }
+    end
+
+    test "parses the published_at time", context do
+      {%Article{published_at: published_at},  _} = HeaderParser.parse_datetime {%Article{}, context[:header]}, :published_at
+
+      assert published_at == %DateTime{
+        hour: 4,
+        minute: 30,
+        second: 0,
+        month: 4,
+        day: 2,
+        year: 2019,
+        time_zone: "Etc/UTC",
+        utc_offset: 0,
+        std_offset: 0,
+        zone_abbr: "UTC"
+      }
+    end
+
+    test "returns no topics if not present" do
+      {%Article{topics: topics},  _} = HeaderParser.parse_topics {%Article{}, ""}
+      assert topics == []
+    end
+
   end
 
   describe "parsing tags" do

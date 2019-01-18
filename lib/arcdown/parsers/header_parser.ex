@@ -10,8 +10,8 @@ defmodule Arcdown.Parsers.HeaderParser do
     slug: ~r/^[\w\s\d]*\<(?<slug>[a-z0-9\-]+)\>(\n|$)/,
     author: ~r/(\n|^)by\ (?<author>[\w\s\d]*[\w\d]+)\ ?\<.*\>?(\n|$)/,
     email: ~r/(\n|^)by\ [\w\s\d]*\<(?<email>.*\@.*\..*)\>(\n|$)/,
-    created_at: ~r/(\n|^)Created @ (?<time>\d{1,2}:\d{2}[ap]m) on (?<date>\d{1,2}\/\d{2}\/\d{4})(\n|$)/,
-    published_at: ~r/(\n|^)Published @ (?<time>\d{1,2}:\d{2}[ap]m) on (?<date>\d{1,2}\/\d{2}\/\d{4})(\n|$)/,
+    created_at: ~r/(\n|^)Created @ (?<time>\d{1,2}:\d{2}[ap]m) on (?<date>\d{1,2}\/\d{1,2}\/\d{4})(\n|$)/,
+    published_at: ~r/(\n|^)Published @ (?<time>\d{1,2}:\d{2}[ap]m) on (?<date>\d{1,2}\/\d{1,2}\/\d{4})(\n|$)/,
     summary: ~r/(\n|^)Summary:\n(?<summary>.*)$/,
     topics: ~r/(\n|^)Filed under: (?<topics>[\w\s\d->]+)(\n|$)/
   }
@@ -25,8 +25,8 @@ defmodule Arcdown.Parsers.HeaderParser do
       |> parse_optional(:author)
       |> parse_optional(:email)
       |> parse_topics
-      |> parse_timestamp(:created_at)
-      |> parse_timestamp(:published_at)
+      |> parse_datetime(:created_at)
+      |> parse_datetime(:published_at)
       |> parse_tags
       |> parse_optional(:summary)
   end
@@ -74,10 +74,10 @@ defmodule Arcdown.Parsers.HeaderParser do
   Matching patterns are parsed and returned as DateTime structs, and applied
   to the matching attribute name in the %Article{} struct.
   """
-  @spec parse_timestamp({Article.t(), binary()}, atom()) :: {Article.t(), binary()}
-  def parse_timestamp({article, header}, attr) do
+  @spec parse_datetime({Article.t(), binary()}, atom()) :: {Article.t(), binary()}
+  def parse_datetime({article, header}, attr) do
     %{"time" => time, "date" => date} = Regex.named_captures @patterns[attr], header
-    {:ok, datetime} = DateTimeParser.parse_human_12h date, time
+    {:ok, datetime, _offset} = DateTimeParser.parse_human_12h date, time
     {Map.put(article, attr, datetime), header}
   end
 
