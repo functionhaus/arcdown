@@ -13,7 +13,7 @@ defmodule Arcdown.Parsers.ArticleParser do
     divider: ~r/\n{2}---\n{2}/,
     empty_file: ~r/^$/,
     whitespace_only: ~r/^[\n\s]*$/,
-    content_only: ~r/^\n{0,2}---/,
+    content_only: ~r/^\n{0,2}---\n{2}/,
     header_only: ~r/\n\n---$/,
     ambiguous: ~r/\n{0,2}---\n{0,2}/
   }
@@ -26,7 +26,7 @@ defmodule Arcdown.Parsers.ArticleParser do
   def parse_file path do
     {:ok, file_text} = File.read path
 
-    case parse_text(file_text) do
+    case parse_text file_text do
       {:ok, parsed_article} -> {:ok, parsed_article}
       _ -> {:error, "Failed to parse article."}
     end
@@ -39,7 +39,20 @@ defmodule Arcdown.Parsers.ArticleParser do
   @spec parse_text(binary()) :: Article.t()
   def parse_text text do
     {:ok, header, content} = match_parts text
-    HeaderParser.parse_header header, %Article{content: content}
+
+    case {header, content} do
+      {nil, nil} ->
+        {:ok, %Article{}}
+
+      {nil, content} ->
+        {:ok, %Article{content: content}}
+
+      {header, nil} ->
+        HeaderParser.parse_header header
+
+      {header, content} ->
+        HeaderParser.parse_header header, %Article{content: content}
+    end
   end
 
   @spec match_parts(binary()) :: {atom(), binary(), binary()}
@@ -52,7 +65,7 @@ defmodule Arcdown.Parsers.ArticleParser do
         {:ok, nil, nil}
 
       Regex.match? @patterns[:content_only], text ->
-        content = Regex.replace @patterns[:content_only], "", text
+        content = Regex.replace @patterns[:content_only], "", text, global: false
         {:ok, nil, content}
 
       Regex.match? @patterns[:header_only], text ->
