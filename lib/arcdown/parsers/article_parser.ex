@@ -9,12 +9,13 @@ defmodule Arcdown.Parsers.ArticleParser do
   alias Arcdown.Parsers.HeaderParser
 
   @patterns %{
-    article: ~r/^(?<header>.*)\n{0,2}---\n{0,2}(?<content>.*$)/,
     divider: ~r/\n{2}---\n{2}/,
     empty_file: ~r/^$/,
     whitespace_only: ~r/^[\n\s]*$/,
-    content_only: ~r/^\n{0,2}---\n{2}/,
-    header_only: ~r/\n\n---$/,
+    divider_only: ~r/^[\n\s]*---[\n\s]*$/,
+    content_only: ~r/^---\n\n/,
+    header_only: ~r/^(?<header>[\w\d]+.*)(?!=(\n\n---\n{0,2}))$/,
+    full_article: ~r/^(?<header>.*)\n{2}---\n{2}(?<content>.*$)/,
     ambiguous: ~r/\n{0,2}---\n{0,2}/
   }
 
@@ -58,18 +59,14 @@ defmodule Arcdown.Parsers.ArticleParser do
   @spec match_parts(binary()) :: {atom(), binary(), binary()}
   def match_parts text do
     cond do
-      Regex.match? @patterns[:empty_file], text ->
-        {:ok, nil, nil}
-
-      Regex.match? @patterns[:whitespace_only], text ->
+      Enum.any?([:empty_file, :whitespace_only, :divider_only], &(Regex.match? @patterns[&1], text)) ->
         {:ok, nil, nil}
 
       Regex.match? @patterns[:content_only], text ->
-        content = Regex.replace @patterns[:content_only], text, ""
-        {:ok, nil, content}
+        {:ok, nil, Regex.replace(@patterns[:content_only], text, "", global: false)}
 
       Regex.match? @patterns[:header_only], text ->
-        %{"header" => header} = Regex.named_captures @patterns[:article], text
+        %{"header" => header} = Regex.named_captures @patterns[:header_only], text
         {:ok, header, nil}
 
       Regex.match? @patterns[:divider], text ->
@@ -77,7 +74,7 @@ defmodule Arcdown.Parsers.ArticleParser do
         {:ok, header, content}
 
       Regex.match? @patterns[:ambiguous], text ->
-        %{"content" => content, "header" => header} = Regex.named_captures @patterns[:article], text
+        %{"content" => content, "header" => header} = Regex.named_captures @patterns[:full_article], text
         {:ok, header, content}
 
       true ->
