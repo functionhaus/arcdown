@@ -12,7 +12,9 @@ defmodule Arcdown.Parsers.ArticleParser do
     article: ~r/^(?<header>.*)\n{0,2}---\n{0,2}(?<content>.*$)/,
     divider: ~r/\n{2}---\n{2}/,
     empty_file: ~r/^$/,
-    content_only: ~r/^\n{0,2}---/
+    content_only: ~r/^\n{0,2}---/,
+    header_only: ~r/\n\n---$/,
+    ambiguous: ~r/\n{0,2}---\n{0,2}/
   }
 
   @doc """
@@ -53,7 +55,11 @@ defmodule Arcdown.Parsers.ArticleParser do
         content = Regex.replace @patterns[:content_only], "", text
         {:ok, nil, content}
 
-      Regex.match? ~r/\n{0,2}---\n{0,2}/, text ->
+      Regex.match? @patterns[:header_only], text ->
+        %{"header" => header} = Regex.named_captures @patterns[:article], text
+        {:ok, header, nil}
+
+      Regex.match? @patterns[:ambiguous], text ->
         %{"content" => content, "header" => header} = Regex.named_captures @patterns[:article], text
         {:ok, header, content}
 
