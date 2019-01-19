@@ -80,6 +80,83 @@ characters will be trimmed and ignored, but for the mostpart Arcdown wants you
 to follow its format as close to the letter as possible in order to not have to
 bloat its parsing logic with attempts to discern formatting errors.
 
+### The Arcdown Header
+
+You're welcome to just parse header information, for example, if you haven't
+written your article yet but know how you want to title and categorize it.
+These are both valid header files:
+
+```
+The Day the Earth Stood Still <the-day-the-earth-stood-still>
+by Julian Blaustein <julian@blaustein.com>
+
+Filed under: Films > Sci-Fi > Classic
+
+Created @ 10:24pm on 1/20/2019
+Published @ 10:20pm on 1/20/2019
+
+* Sci-Fi
+* Horror
+* Thrillers
+* Aliens
+
+Summary:
+A sci-fi classic about a flying saucer landing in Washington, D.C.
+```
+
+Also:
+```
+The Day the Earth Stood Still <the-day-the-earth-stood-still>
+by Julian Blaustein <julian@blaustein.com>
+
+Filed under: Films > Sci-Fi > Classic
+
+Created @ 10:24pm on 1/20/2019
+Published @ 10:20pm on 1/20/2019
+
+* Sci-Fi
+* Horror
+* Thrillers
+* Aliens
+
+Summary:
+A sci-fi classic about a flying saucer landing in Washington, D.C.
+
+---
+```
+
+Notice how the three-hyphen *content divider* ends the header text here. The
+divider has semantic importance in parsing Arcdown files, and should always
+appear exactly as three hyphens preceded by two newline characters.
+
+The divider above actually looks like `\n\n---` when parsed into a string. This
+is important because Arcdown looks for this divider to mark the ending of the
+header section and the beginning of the content.
+
+### Arcdown Content
+
+Conversely to the header element, the *Content* portion of an Arcdown file
+begins with the hyphen divider `---` followed by two newline characters.
+
+This is a valid Arcdown file in which the parser will simply extract the content
+body and ignore any header parsing in the absence of header data:
+
+```
+---
+
+The Day the Earth Stood Still (a.k.a. Farewell to the Master and Journey to the
+World) is a 1951 American black-and-white science fiction film from 20th Century
+Fox, produced by Julian Blaustein and directed by Robert Wise.
+```
+
+Omitting the hyphen divider `---` element will suggest to the parser that this
+is actually the title of the article rather than the content. As such, the
+divider must begin the parsed string, followed by two newlines, like this:
+
+```
+---\n\nContent goes here.
+```
+
 ## Installation
 
 The package can be installed by adding `arcdown` to your list of
