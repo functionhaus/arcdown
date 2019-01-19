@@ -51,10 +51,6 @@ defmodule Arcdown.Parsers.ArticleParser do
       Regex.match? @patterns[:whitespace_only], text ->
         {:ok, nil, nil}
 
-      Regex.match? @patterns[:divider], text ->
-        [header, content] = Regex.split @patterns[:divider], text, parts: 2
-        {:ok, header, content}
-
       Regex.match? @patterns[:content_only], text ->
         content = Regex.replace @patterns[:content_only], "", text
         {:ok, nil, content}
@@ -62,6 +58,10 @@ defmodule Arcdown.Parsers.ArticleParser do
       Regex.match? @patterns[:header_only], text ->
         %{"header" => header} = Regex.named_captures @patterns[:article], text
         {:ok, header, nil}
+
+      Regex.match? @patterns[:divider], text ->
+        [header, content] = Regex.split @patterns[:divider], text, parts: 2
+        {:ok, header, content}
 
       Regex.match? @patterns[:ambiguous], text ->
         %{"content" => content, "header" => header} = Regex.named_captures @patterns[:article], text
