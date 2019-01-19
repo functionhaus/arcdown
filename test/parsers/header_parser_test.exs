@@ -12,7 +12,7 @@ defmodule HeaderParserTest do
   end
 
   describe "parsing the title line" do
-    test "parsing the title if present", context do
+    test "returns the title if present", context do
       {%Article{title: title},  _} = HeaderParser.parse_optional {%Article{}, context[:header]}, :title
       assert title == "The Day the Earth Stood Still"
     end
