@@ -19,7 +19,7 @@ defmodule Arcdown.Parsers.HeaderParser do
   @doc "Parses a raw header string into an Article struct"
   @spec parse_header(binary()) :: Article.t()
   def parse_header(header, article \\ %Article{}) do
-    {article, header}
+    {parsed_article, _} = {article, header}
       |> parse_optional(:title)
       |> parse_optional(:slug)
       |> parse_optional(:author)
@@ -29,6 +29,8 @@ defmodule Arcdown.Parsers.HeaderParser do
       |> parse_datetime(:published_at)
       |> parse_tags
       |> parse_optional(:summary)
+
+    {:ok, parsed_article}
   end
 
   @doc """

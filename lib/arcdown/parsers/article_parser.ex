@@ -8,7 +8,10 @@ defmodule Arcdown.Parsers.ArticleParser do
   alias Arcdown.Article
   alias Arcdown.Parsers.HeaderParser
 
-  @divider_pattern ~r/\n{2}---\n{2}/
+  @patterns %{
+    divider: ~r/\n{2}---\n{2}/,
+    article: ~r/(?<header>^.*)\n{2}---\n{2}(?<content>.*$)/
+  }
 
   @doc """
   Read a full Arcdown article from a given filee path, split the header and
@@ -17,22 +20,32 @@ defmodule Arcdown.Parsers.ArticleParser do
   @spec parse_file(binary()) :: Article.t()
   def parse_file path do
     {:ok, file_text} = File.read path
-    parse_string file_text
+
+    case parse_text(file_text) do
+      {:ok, parsed_article} -> {:ok, parsed_article}
+      _ -> {:error, "Failed to parse article."}
+    end
   end
 
   @doc """
   Take in a full Arcdown article as a single string, split the header and
   content, construct an Article with content, and parse the header data.
   """
-  @spec parse_string(binary()) :: Article.t()
-  def parse_string article_text do
-    {:ok, header, content} = split_parts article_text
-
+  @spec parse_text(binary()) :: Article.t()
+  def parse_text arcdown_text do
+    {:ok, header, content} = split_parts arcdown_text
     HeaderParser.parse_header header, %Article{content: content}
+  end
+
+  @spec match_parts(binary()) :: {atom(), binary(), binary()}
+  def match_parts article_text do
+    %{header: header, content: content} = Regex.named_captures @patterns[:article], article_text
+    {:ok, header, content}
   end
 
   @spec split_parts(binary()) :: {atom(), binary(), binary()}
   def split_parts article_text do
-    Regex.split @divider_pattern, article_text, parts: 2
+    [header, content] = Regex.split @patterns[:divider], article_text, parts: 2
+    {:ok, header, content}
   end
 end
