@@ -31,50 +31,6 @@ defmodule ArticleParserTest do
       }
   end
 
-#   describe ".split_parts" do
-#     test "parsing text that has only content" do
-#       {:ok, file_text} = "test/support/articles/content_only.ad"
-#         |> Path.relative_to_cwd
-#         |> File.read
-#
-#         IO.puts "content only:"
-#         # IO.puts file_text
-#
-#       {:ok, header, content} = ArticleParser.split_parts file_text
-#
-#       assert header == nil
-#       assert content != nil
-#     end
-#
-#     test "parsing text that has only a header" do
-#       {:ok, file_text} = "test/support/articles/header_only.ad"
-#         |> Path.relative_to_cwd
-#         |> File.read
-#
-#         IO.puts "header only:"
-#         # IO.puts file_text
-#
-#       {:ok, header, content} = ArticleParser.split_parts file_text
-#
-#       assert header != nil
-#       assert content == nil
-#     end
-#
-#     test "parsing an empty string" do
-#       {:ok, header, content} = ArticleParser.split_parts ""
-#
-#       assert header == nil
-#       assert content == nil
-#     end
-#
-#     test "parsing a string with only whitespace and newlines" do
-#       {:ok, header, content} = ArticleParser.split_parts "\n\n\n   \n\n\n"
-#
-#       assert header == nil
-#       assert content == nil
-#     end
-#   end
-
   describe ".match_parts" do
     test "parsing text that has only content" do
       {:ok, file_text} = "test/support/articles/content_only.ad"
@@ -108,7 +64,7 @@ defmodule ArticleParserTest do
     test "parsing a string with only whitespace and newlines" do
       {:ok, header, content} = ArticleParser.match_parts "\n\n\n   \n\n\n"
 
-      assert header == "\n\n\n   \n\n\n"
+      assert header == nil
       assert content == nil
     end
   end

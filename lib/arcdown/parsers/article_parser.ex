@@ -12,6 +12,7 @@ defmodule Arcdown.Parsers.ArticleParser do
     article: ~r/^(?<header>.*)\n{0,2}---\n{0,2}(?<content>.*$)/,
     divider: ~r/\n{2}---\n{2}/,
     empty_file: ~r/^$/,
+    whitespace_only: ~r/^[\n\s]*$/,
     content_only: ~r/^\n{0,2}---/,
     header_only: ~r/\n\n---$/,
     ambiguous: ~r/\n{0,2}---\n{0,2}/
@@ -45,6 +46,9 @@ defmodule Arcdown.Parsers.ArticleParser do
   def match_parts text do
     cond do
       Regex.match? @patterns[:empty_file], text ->
+        {:ok, nil, nil}
+
+      Regex.match? @patterns[:whitespace_only], text ->
         {:ok, nil, nil}
 
       Regex.match? @patterns[:divider], text ->
