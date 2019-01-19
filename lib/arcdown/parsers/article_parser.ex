@@ -65,7 +65,7 @@ defmodule Arcdown.Parsers.ArticleParser do
         {:ok, nil, nil}
 
       Regex.match? @patterns[:content_only], text ->
-        content = Regex.replace @patterns[:content_only], "", text, global: false
+        content = Regex.replace @patterns[:content_only], text, ""
         {:ok, nil, content}
 
       Regex.match? @patterns[:header_only], text ->
