@@ -19,7 +19,6 @@ defmodule DateTimeParserTest do
       }
   end
 
-
   test "correctly parses a date with am time" do
     {:ok, parsed, _offset} = DateTimeParser.parse_human_12h("4/2/2019", "4:30am")
     assert parsed == %DateTime{
