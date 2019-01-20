@@ -66,6 +66,22 @@ Additional content parsing options may be included in the future, but for now
 the goal is to remain as content-agnostic as possible in order to give users the
 choice of how format and write their own articles.
 
+## Installation
+
+The package can be installed by adding `arcdown` to your list of
+dependencies in `mix.exs`:
+
+```elixir
+def deps do
+  [
+    {:arcdown, "~> 0.1"}
+  ]
+end
+```
+
+Arcdown has no dependencies other than ex_doc which is only included in the `docs`
+context.
+
 ## Usage
 
 Parsing Arcdown text is easy thanks to a couple of helpers in the top-level
@@ -191,19 +207,6 @@ Omitting the hyphen divider `---` element will suggest to the parser that this
 is actually the title of the article rather than the content. As such, the
 divider must begin the parsed string, followed by two newlines, like this:
 `---\n\nContent goes here.`
-
-## Installation
-
-The package can be installed by adding `arcdown` to your list of
-dependencies in `mix.exs`:
-
-```elixir
-def deps do
-  [
-    {:arcdown, "~> 0.1"}
-  ]
-end
-```
 
 ## Availability
 
