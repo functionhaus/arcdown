@@ -68,6 +68,67 @@ choice of how format and write their own articles.
 
 ## Usage
 
+Parsing Arcdown text is easy thanks to a couple of helpers in the top-level
+Arcdown module. The default interface permits parsing Arcdown text either
+directly from a string, like this:
+
+```
+{:ok, parsed} = Arcdown.parse_file "earth_stood_still.ad"
+```
+
+Or just by parsing the entire text from a string, like this:
+
+```
+article_text = """
+The Day the Earth Stood Still <the-day-the-earth-stood-still>
+by Julian Blaustein <julian@blaustein.com>
+
+Filed under: Films > Sci-Fi > Classic
+
+Created @ 10:24pm on 1/20/2019
+Published @ 4:30am on 4/2/2019
+
+* Sci-Fi
+* Horror
+* Thrillers
+* Aliens
+
+Summary:
+A sci-fi classic about a flying saucer landing in Washington, D.C.
+
+---
+
+The Day the Earth Stood Still (a.k.a. Farewell to the Master and Journey to the
+World) is a 1951 American black-and-white science fiction film from 20th Century
+Fox, produced by Julian Blaustein and directed by Robert Wise.
+"""
+
+{:ok, parsed} = Arcdown.parse full_article
+```
+
+In both instances, the parser will return a tuple in the format of
+`{:ok, `%Arcdown.Article{}`}. The Article struct will contain all of its data
+attributes fully parsed and formatted. Presuming that the text in both examples
+above match the string-parsing example, the resulting struct would look like
+this:
+
+```
+%Arcdown.Article{
+  author: "Julian Blaustein",
+  content: "The Day the Earth Stood Still (a.k.a. Farewell to the Master and Journey to the\nWorld) is a 1951 American black-and-white science fiction film from 20th Century\nFox, produced by Julian Blaustein and directed by Robert Wise.\n",
+  created_at: #DateTime<2019-01-20 22:24:00Z>,
+  email: "julian@blaustein.com",
+  published_at: #DateTime<2019-04-02 04:30:00Z>,
+  slug: "the-day-the-earth-stood-still",
+  summary: "A sci-fi classic about a flying saucer landing in Washington, D.C.",
+  tags: [:sci_fi, :horror, :thrillers, :aliens],
+  title: "The Day the Earth Stood Still",
+  topics: ["Films", "Sci-Fi", "Classic"]
+}
+```
+
+### Arcdown Formatting
+
 Because arcdown (.ad) files are parsed entirely with robust regular expressions,
 formatting must match the above example exactly.
 
