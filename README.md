@@ -123,7 +123,7 @@ Fox, produced by Julian Blaustein and directed by Robert Wise.
 ```
 
 In both instances, the parser will return a tuple in the format of
-`{:ok, `%Arcdown.Article{}`}. The Article struct will contain all of its data
+`{:ok, %Arcdown.Article{}}`. The Article struct will contain all of its data
 attributes fully parsed and formatted. Presuming that the text in both examples
 above match the string-parsing example, the resulting struct would look like
 this:
