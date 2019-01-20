@@ -86,7 +86,7 @@ context.
 
 Parsing Arcdown text is easy thanks to a couple of helpers in the top-level
 Arcdown module. The default interface permits parsing Arcdown text either
-directly from a string, like this:
+directly from a file, like this:
 
 ```elixir
 {:ok, parsed} = Arcdown.parse_file "earth_stood_still.ad"

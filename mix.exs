@@ -1,7 +1,7 @@
 defmodule Arcdown.MixProject do
   use Mix.Project
 
-  @version "0.1.1"
+  @version "0.1.2"
   @description "A parsing library for articles written in Arcdown (.ad) format."
 
   def project do
