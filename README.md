@@ -119,7 +119,7 @@ World) is a 1951 American black-and-white science fiction film from 20th Century
 Fox, produced by Julian Blaustein and directed by Robert Wise.
 """
 
-{:ok, parsed} = Arcdown.parse full_article
+{:ok, parsed} = Arcdown.parse article_text
 ```
 
 In both instances, the parser will return a tuple in the format of
