@@ -72,13 +72,13 @@ Parsing Arcdown text is easy thanks to a couple of helpers in the top-level
 Arcdown module. The default interface permits parsing Arcdown text either
 directly from a string, like this:
 
-```
+```elixir
 {:ok, parsed} = Arcdown.parse_file "earth_stood_still.ad"
 ```
 
 Or just by parsing the entire text from a string, like this:
 
-```
+```elixir
 article_text = """
 The Day the Earth Stood Still <the-day-the-earth-stood-still>
 by Julian Blaustein <julian@blaustein.com>
@@ -112,7 +112,7 @@ attributes fully parsed and formatted. Presuming that the text in both examples
 above match the string-parsing example, the resulting struct would look like
 this:
 
-```
+```elixir
 %Arcdown.Article{
   author: "Julian Blaustein",
   content: "The Day the Earth Stood Still (a.k.a. Farewell to the Master and Journey to the\nWorld) is a 1951 American black-and-white science fiction film from 20th Century\nFox, produced by Julian Blaustein and directed by Robert Wise.\n",
