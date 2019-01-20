@@ -1,25 +1,29 @@
 defmodule Arcdown.MixProject do
   use Mix.Project
 
+  @version "0.1.0"
+  @description "A parsing library for articles written in Arcdown (.ad) format."
+
   def project do
     [
       app: :arcdown,
       name: "Arcdown",
-      version: "0.1.0",
-      elixir: "~> 1.8",
+      version: @version,
+      elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
       build_embedded: Mix.env() == :prod,
       elixirc_paths: elixirc_paths(Mix.env),
       deps: deps(),
-      description: description(),
+      description: @description,
       package: package(),
       source_url: "https://github.com/functionhaus/arcdown",
       homepage_url: "https://functionhaus.com",
-
       docs: [
-        main: "Arcdown", # The main page in the docs
         logo: "assets/functionhaus_logo.png",
-        extras: ["README.md"]
+        extras: ["README.md"],
+        main: "readme",
+        source_ref: "v#{@version}",
+        source_url: "https://github.com/functionhaus/arcdown"
       ]
     ]
   end
@@ -38,10 +42,6 @@ defmodule Arcdown.MixProject do
     [
       {:ex_doc, "~> 0.19", only: :docs}
     ]
-  end
-
-  defp description do
-    "A parsing library for articles written in Arcdown (.ad) format."
   end
 
   defp package do
