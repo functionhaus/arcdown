@@ -41,9 +41,7 @@ defmodule Arcdown.MixProject do
   end
 
   defp description do
-    """
-    A parsing library for articles written in Arcdown (.ad) format.
-    """
+    "A parsing library for articles written in Arcdown (.ad) format."
   end
 
   defp package do
