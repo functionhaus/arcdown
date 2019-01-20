@@ -23,13 +23,13 @@ defmodule Arcdown.Parsers.ArticleParser do
   Read a full Arcdown article from a given filee path, split the header and
   content, construct an Article with content, and parse the header data.
   """
-  @spec parse_file(binary()) :: Article.t()
+  @spec parse_file(binary()) :: {atom(), Article.t()|binary()}
   def parse_file path do
     {:ok, file_text} = File.read path
 
     case parse_text file_text do
       {:ok, parsed_article} -> {:ok, parsed_article}
-      _ -> {:error, "Failed to parse article."}
+      _ -> {:error, "Failed to parse article text."}
     end
   end
 
@@ -37,7 +37,7 @@ defmodule Arcdown.Parsers.ArticleParser do
   Take in a full Arcdown article as a single string, split the header and
   content, construct an Article with content, and parse the header data.
   """
-  @spec parse_text(binary()) :: Article.t()
+  @spec parse_text(binary()) :: {atom(), Article.t()|binary()}
   def parse_text text do
     {:ok, header, content} = match_parts text
 
@@ -56,7 +56,7 @@ defmodule Arcdown.Parsers.ArticleParser do
     end
   end
 
-  @spec match_parts(binary()) :: {atom(), binary(), binary()}
+  @spec match_parts(binary()) :: {atom(), binary()|nil, binary()|nil}
   def match_parts text do
     cond do
       Enum.any?([:empty_file, :whitespace_only, :divider_only], &(Regex.match? @patterns[&1], text)) ->
