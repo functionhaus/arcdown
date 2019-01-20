@@ -19,7 +19,6 @@ defmodule Arcdown do
     ArticleParser.parse_file path
   end
 
-
   @doc """
   Wrapper method for directly parsing a text from Arcdown format into an object.
   """
